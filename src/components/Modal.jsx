@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 
 export const Modal = ({showModal,setShowModal}) => {
-  const role=useRef(null),desc=useRef(null),yoe=useRef(null),profile=useRef(null);
+  const role=useRef(null),desc=useRef(null),yoe=useRef(null);
 
   const [skills,setSkills]=useState([]);
   const [counter,setCounter]=useState(0);
@@ -17,9 +17,29 @@ export const Modal = ({showModal,setShowModal}) => {
     abc[e.target.className]=e.target.value;
     setSkills({...skills,...abc});
   }
+
   const clear=()=>{
     setSkills([]);
     setCounter(0);
+  }
+
+  const postReq=()=>{
+    const data={
+      "id":"",
+      "desc":desc.current.value,
+      "exp":yoe.current.value,
+      "profile":role.current.value,
+      "techs":Object.values(skills)
+    }
+    fetch("https://joblisting-api-service.onrender.com/post",{
+      method:'POST',
+      body: JSON.stringify(data),
+      headers:{
+        "Content-type":"application/json; charset=UTF-8"
+      }
+    }).then(response=>response.json())
+    .then();
+    setShowModal(false);
   }
   return (
     <>
@@ -49,20 +69,18 @@ export const Modal = ({showModal,setShowModal}) => {
                     </label>
                     
                     <textarea className="shadow appearance-none border rounded w-full py-2 px-1 text-black" ref={desc}/>
-                    <div className='grid grid-cols-2 grid-rows-2 gap-0'>
-                      <label className=" text-black text-sm font-bold mb-1">
-                        Years of Experience
-                      </label>
-                      <label className=" text-black text-sm font-bold mb-1">
-                        Profile
-                      </label>
-                      <input className="shadow appearance-none border rounded w-1/2 text-black text-center" ref={yoe}/>
-                      <input className="shadow appearance-none border rounded w-full p-1 text-black text-center" ref={profile}/>
-                    </div>
                     
-                    <label className="block text-black text-sm font-bold mb-1">
+                    <label className="block text-black text-sm font-bold mb-1 py-2 px-1">
+                      Years of Experience
+                    </label>
+                    <input className="pl-4 shadow appearance-none border rounded w-1/2 text-black text-center px-1" ref={yoe}/>
+                      
+                    
+                    
+                    <label className="pt-4 block text-black text-sm font-bold mb-1">
                       Skills
                     </label>
+      
                     {Array.from(Array(counter)).map((c, index) => {
                       return (
                         <span className='p-2 block'>
@@ -77,27 +95,27 @@ export const Modal = ({showModal,setShowModal}) => {
                       
                       );}
                     )}
+                    
                     <button onClick={addInput}>
                       <p className='text-3xl p-3'>+</p>
                     </button>
                     <button onClick={clear}>
                       <p className='text-3xl p-3'>-</p>
                     </button>
-                  
                   </div>
                 </div>
                 <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                   <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                    className="text-blue-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
                     type="button"
                     onClick={() => setShowModal(false)}
                   >
                     Close
                   </button>
                   <button
-                    className="text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                    className="text-white bg-blue-500 active:bg-blue-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={postReq}
                   >
                     Submit
                   </button>

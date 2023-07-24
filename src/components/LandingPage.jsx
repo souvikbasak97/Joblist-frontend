@@ -9,7 +9,7 @@ const LandingPage = () => {
   const [jobs,setJobs]=useState();
   const [showModal,setModal]=useState(false);
   const getJobs=async()=>{
-    await fetch("http://localhost:8080/posts").then(response=>{
+    await fetch("https://joblisting-api-service.onrender.com/posts").then(response=>{
       return response.json();
     }).then(Jobs=>{
       setJobs(Jobs);
@@ -25,7 +25,7 @@ const LandingPage = () => {
     setJobs();
     if(term.length>0){
         const getSearch=async()=>{
-        await fetch(`http://localhost:8080/posts/${term}`).then(response=>{ 
+        await fetch(`https://joblisting-api-service.onrender.com/posts/${term}`).then(response=>{ 
           return response.json();
         }).then(Jobs=>{
           setJobs(Jobs);

@@ -2,21 +2,32 @@ import React from 'react'
 import { Default } from './Default'
 
 const JobCard = ({jobs}) => {
-    if(jobs?.length==0)
+    if(jobs?.length===0)
         return <Default/>
+    const deletePost=(id)=>{
+        console.log(id);
+        fetch(`https://joblisting-api-service.onrender.com/post/${id}`,{
+            method:'DELETE',
+            headers:{
+                "Content-type":"application/json; charset=UTF-8"
+            }
+        }).then(()=>console.log("Deleted"+id+"successfully"));
+    }
   return (
     <div className='container m-auto grid grid-cols-4'>
         {
             jobs?.map((j)=>{
+                
                 return(
                     <>    
                         <div className="m-2 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg cursor-pointer justify-center">
+                            <button className='flex text-xl text-white bg-red-700 rounded-full relative right-0 top-0' onClick={()=>deletePost(j.id)}>X</button>
                             <a href="#">
                                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{j.profile}</h5>
                             </a>
-                            <p className="mb-3 font-normal text-gray-700 text-gray-400">{j.desc}</p>
-                            <p className='mb-3 font-bold text-gray-700 text-gray-400'>YOE-{j.exp}</p>
-                            <p className='mb-3 font-normal text-gray-700 text-gray-400'>Profile-{j.profile}</p>
+                            <p className="mb-3 font-normal  text-gray-400">{j.desc}</p>
+                            <p className='mb-3 font-bold  text-gray-400'>YOE-{j.exp}</p>
+                            <p className='mb-3 font-normal  text-gray-400'>Profile-{j.profile}</p>
                             <h6 className='mb-2 text-l font-bold tracking-tight text-gray-700'>Skills</h6>
                             {
                                 j.techs.map((tech)=>{
