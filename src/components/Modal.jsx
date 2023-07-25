@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react'
+import { Loading } from './Loading';
 
 export const Modal = ({showModal,setShowModal}) => {
   const role=useRef(null),desc=useRef(null),yoe=useRef(null);
 
   const [skills,setSkills]=useState([]);
   const [counter,setCounter]=useState(0);
-
+  const [loading,setLoading]=useState(false);
   const addInput=(s)=>{
     setCounter(counter+1);
     console.log(counter);
@@ -31,6 +32,7 @@ export const Modal = ({showModal,setShowModal}) => {
       "profile":role.current.value,
       "techs":Object.values(skills)
     }
+    setLoading(true);
     fetch("https://joblisting-api-service.onrender.com/post",{
       method:'POST',
       body: JSON.stringify(data),
@@ -38,13 +40,15 @@ export const Modal = ({showModal,setShowModal}) => {
         "Content-type":"application/json; charset=UTF-8"
       }
     }).then(response=>response.json())
-    .then();
+    .then(res=>{
+      setLoading(false);
+    });
     setShowModal(false);
   }
   return (
     <>
       {showModal ? (
-          <div className="backdrop:blur-md bg-white/20 flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+          <div className="backdrop:blur-3xl bg-white/20 flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
             <div className="relative w-1/2 my-6 mx-auto max-w-3xl">
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
@@ -70,12 +74,10 @@ export const Modal = ({showModal,setShowModal}) => {
                     
                     <textarea className="shadow appearance-none border rounded w-full py-2 px-1 text-black" ref={desc}/>
                     
-                    <label className="block text-black text-sm font-bold mb-1 py-2 px-1">
+                    <label className="block text-black text-sm font-bold mb-1 py-2">
                       Years of Experience
                     </label>
-                    <input className="pl-4 shadow appearance-none border rounded w-1/2 text-black text-center px-1" ref={yoe}/>
-                      
-                    
+                    <input className="p-1 shadow appearance-none border rounded w-1/4 text-black text-center px-1" ref={yoe}/>                 
                     
                     <label className="pt-4 block text-black text-sm font-bold mb-1">
                       Skills
@@ -87,7 +89,8 @@ export const Modal = ({showModal,setShowModal}) => {
                            <input                        
                             onChange={handleInputChange}
                             key={c}
-                            className={index}
+                            class={index}
+                            className='p-2'
                             type="text"
                           />
                         </span>
@@ -105,6 +108,7 @@ export const Modal = ({showModal,setShowModal}) => {
                   </div>
                 </div>
                 <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                  {loading? <Loading text={"Saving data..."}/>:null}
                   <button
                     className="text-blue-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
                     type="button"
